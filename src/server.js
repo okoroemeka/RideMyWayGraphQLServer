@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import cookieParser from 'cookie-parser';
 import createServer from './createServer';
 
-dotenv.config({ path: 'variables.env' });
+dotenv.config({ path: 'variable.env' });
 const server = createServer();
 
 // TODO use express middleware to handle cookies (JWT)

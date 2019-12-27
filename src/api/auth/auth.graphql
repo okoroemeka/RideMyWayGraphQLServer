@@ -3,16 +3,33 @@ type User {
   firstname: String!
   lastname: String!
   email: String!
-  password: String!
-  confirmPassword: String!
+  password: String
+  confirmPassword: String
   phone: String!
 }
 
-input NewUser{
+input NewUserInput{
   firstname: String!
   lastname: String!
   email: String!
   password: String!
   confirmPassword: String!
   phone: String!
+}
+input UserInput{
+  email: String!
+  lastname: String
+  firstname: String
+  password:String
+}
+input SignInInput{
+  email:String!
+  password: String!
+}
+type Query{
+  user(input:UserInput!):User!
+}
+type Mutation {
+  createUser(input: NewUserInput!):User!
+  signIn(input:SignInInput!):User!
 }
