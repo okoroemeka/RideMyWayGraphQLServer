@@ -27,8 +27,8 @@ const createUserHelper = async (
   // Hash password
   const hashPassword = await bcrypt.hash(password, 10);
   const user = await ctx.models.users.create({
-    firstname,
-    lastname,
+    firstname: firstname.toLowerCase(),
+    lastname: lastname.toLowerCase(),
     email,
     phone,
     password: hashPassword
