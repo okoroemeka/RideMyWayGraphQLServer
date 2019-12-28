@@ -26,4 +26,6 @@ const serverOptions = {
   debug: true
 };
 
-server.start(serverOptions,({port}) => console.log(`Server on port ${port}`))
+server.start(
+  serverOptions
+,({port}) => console.log(`Server on port ${port}`))

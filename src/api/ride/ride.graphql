@@ -1,0 +1,31 @@
+type Ride {
+    id: Int
+    pickup: String!
+    destination: String!
+    departure: String!
+    capacity: Int!
+    carColor: String!
+    carType: String!
+    plateNumber: String!
+    userId: Int
+  }
+  input NewRideInput{
+    pickup: String!
+    destination: String!
+    departure: String!
+    capacity: Int!
+    carColor: String!
+    carType: String!
+    plateNumber: String!
+  }
+
+  input GetRideInput{
+    id: Int!
+  }
+
+  extend type Query{
+    getRide(input:GetRideInput!):Ride!
+  }
+ extend type Mutation {
+   createRide(input: NewRideInput!): Ride!
+ }
