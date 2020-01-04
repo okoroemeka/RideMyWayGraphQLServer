@@ -1,0 +1,15 @@
+type RideRequest {
+  id: Int!
+  approved: Boolean!
+  userId: Int!
+  rudeId: Int!
+}
+input respondToRequestInput {
+  rideId: Int!
+  requestId: Int!
+  approved: Boolean!
+}
+
+extend type Mutation {
+  rideRequest(input: respondToRequestInput!): RideRequest!
+}
