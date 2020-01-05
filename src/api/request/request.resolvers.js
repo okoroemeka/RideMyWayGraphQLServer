@@ -42,9 +42,6 @@ const getRideRequests = async (_, { input }, ctx, info) => {
   const { rideId } = input;
   const { models } = ctx;
   userAuth(ctx);
-  // if (!userId) {
-  //   throw new Error('Please login to continue');
-  // }
   const requests = await models.request.findAll({
     where: {
       rideId
@@ -52,11 +49,24 @@ const getRideRequests = async (_, { input }, ctx, info) => {
   });
   return requests;
 };
+
+const joinRide = async (_, { input }, ctx, info) => {
+  userAuth(ctx);
+  const { models } = ctx;
+  const { userId } = ctx.request;
+  const { rideId } = input;
+  const request = await models.request.create({
+    rideId,
+    userId
+  });
+  return request;
+};
 export default {
   Query: {
     getRideRequests
   },
   Mutation: {
-    respondToRideRequest
+    respondToRideRequest,
+    joinRide
   }
 };
