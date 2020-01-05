@@ -2,14 +2,19 @@ type RideRequest {
   id: Int!
   approved: Boolean!
   userId: Int!
-  rudeId: Int!
+  rideId: Int!
 }
 input respondToRequestInput {
   rideId: Int!
   requestId: Int!
   approved: Boolean!
 }
-
+input getRequests {
+  rideId: Int!
+}
+extend type Query {
+  getRideRequests(input: getRequests!): [RideRequest]!
+}
 extend type Mutation {
-  rideRequest(input: respondToRequestInput!): RideRequest!
+  respondToRideRequest(input: respondToRequestInput!): RideRequest!
 }
