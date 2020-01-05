@@ -11,7 +11,8 @@ const createRideHelper = (input, model, userId) => {
 const createRide = (_, { input }, ctx, info) => {
   checkFields(input);
   const { userId } = ctx.request;
-  if (!userId) throw new Error('Please login to continue');
+  // if (!userId) throw new Error('Please login to continue');
+  userAuth(ctx);
   return createRideHelper(input, ctx.models.ride, userId);
 };
 /**

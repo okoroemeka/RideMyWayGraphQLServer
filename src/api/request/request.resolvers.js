@@ -9,7 +9,7 @@ import { findRideById, findRideRequestById } from '../../utils/queryHelper';
  * @param {object} info
  * @returns {object}
  */
-const rideRequest = async (_, { input }, ctx, info) => {
+const respondToRideRequest = async (_, { input }, ctx, info) => {
   userAuth(ctx);
   const { models } = ctx;
   const { rideId, requestId, approved } = input;
@@ -38,11 +38,25 @@ const rideRequest = async (_, { input }, ctx, info) => {
     text: `Ride ${approved ? 'accepted' : 'rejected'} successfully`
   };
 };
-
+const getRideRequests = async (_, { input }, ctx, info) => {
+  const { rideId } = input;
+  const { models } = ctx;
+  userAuth(ctx);
+  // if (!userId) {
+  //   throw new Error('Please login to continue');
+  // }
+  const requests = await models.request.findAll({
+    where: {
+      rideId
+    }
+  });
+  return requests;
+};
 export default {
-  // Query: {
-  // },
+  Query: {
+    getRideRequests
+  },
   Mutation: {
-    rideRequest
+    respondToRideRequest
   }
 };
