@@ -12,9 +12,13 @@ input respondToRequestInput {
 input getRequests {
   rideId: Int!
 }
+input joinRideInput {
+  rideId: Int!
+}
 extend type Query {
   getRideRequests(input: getRequests!): [RideRequest]!
 }
 extend type Mutation {
   respondToRideRequest(input: respondToRequestInput!): RideRequest!
+  joinRide(input: joinRideInput!): RideRequest!
 }
