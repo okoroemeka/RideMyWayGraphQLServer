@@ -1,8 +1,15 @@
+# import User from '../auth/auth.graphql'
+# import Ride from '../ride/ride.graphql'
+# import message from '../ride/ride.graphql'
+
+
 type RideRequest {
   id: Int!
   approved: Boolean!
   userId: Int!
-  rideId: Int!
+  rideId: Int
+  user: User
+  ride: Ride
 }
 input respondToRequestInput {
   rideId: Int!
@@ -10,15 +17,15 @@ input respondToRequestInput {
   approved: Boolean!
 }
 input getRequests {
-  rideId: Int!
+  rideId: Int
 }
 input joinRideInput {
   rideId: Int!
 }
 extend type Query {
-  getRideRequests(input: getRequests!): [RideRequest]!
+  getRideRequests(input: getRequests): [RideRequest]!
 }
 extend type Mutation {
-  respondToRideRequest(input: respondToRequestInput!): RideRequest!
+  respondToRideRequest(input: respondToRequestInput!): message!
   joinRide(input: joinRideInput!): RideRequest!
 }

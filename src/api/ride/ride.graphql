@@ -1,3 +1,5 @@
+# import User from '../auth/auth.graphql'
+
 type Ride {
   id: Int
   pickup: String!
@@ -8,6 +10,7 @@ type Ride {
   carType: String!
   plateNumber: String!
   userId: Int
+  user: User
 }
 type message {
   text: String!
@@ -23,8 +26,8 @@ input NewRideInput {
 }
 
 input GetRidesInput {
-  pickup: String!
-  destination: String!
+  pickup: String
+  destination: String
 }
 
 extend type Query {

@@ -1,4 +1,4 @@
-import  dotenv  from 'dotenv';
+import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 import cookieParser from 'cookie-parser';
 import createServer from './createServer';
@@ -23,9 +23,13 @@ const serverOptions = {
   endpoint: '/graphql',
   playground: '/docs',
   tracing: true,
-  debug: true
+  debug: true,
+  cors: {
+    credentials: true,
+    origin: process.env.FRONTEND_URL
+  }
 };
 
-server.start(
-  serverOptions
-,({port}) => console.log(`Server on port ${port}`))
+server.start(serverOptions, ({ port }) =>
+  console.log(`Server on port ${port}`)
+);
