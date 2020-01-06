@@ -1,6 +1,10 @@
+import Sequelize from 'sequelize';
 import checkFields from '../../utils/checkFields';
 import userAuth from '../../utils/userAuth';
 import { findRideById, findRideRequestById } from '../../utils/queryHelper';
+
+const Op = Sequelize.Op;
+
 const createRideHelper = (input, model, userId) => {
   return model.create({
     ...input,
@@ -24,7 +28,8 @@ const createRide = (_, { input }, ctx, info) => {
 const getRidesHelper = (input, model) => {
   return model.findAll({
     where: {
-      ...input
+      pickup: input.pickup,
+      destination: { [Op.startsWith]: input.destination }
     },
     attributes: [
       'id',
