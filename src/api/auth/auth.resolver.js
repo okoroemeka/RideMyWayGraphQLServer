@@ -17,7 +17,6 @@ const createUserHelper = async (
     }
   });
 
-  console.log('checkUser', checkUser);
   if (checkUser)
     throw new Error('User already exist, please signin to continue.');
 
@@ -83,7 +82,6 @@ const signInHelper = async (args, ctx) => {
     { userId: dataValues.id, email: dataValues.email },
     process.env.APP_SECRET
   );
-
   ctx.response.cookie('token', token, {
     httpOnly: true,
     maxAge: 1000 * 60 * 60 * 24 * 365
@@ -96,14 +94,53 @@ const signInHelper = async (args, ctx) => {
  * @param {object} args
  * @param {object} ctx
  * @param {object} info
+ * @returns {object} signInHelper
  */
 const signIn = (_, args, ctx, info) => {
   return signInHelper(args, ctx);
 };
 
+/**
+ *
+ * @param {*} _
+ * @param {object} args
+ * @param {object} ctx
+ * @param {object} info
+ * @returns {object} 
+ */
+const signOut=(_, args, ctx, info)=>{
+  ctx.response.clearCookie('token')
+  return {text: 'logged out successfully!'}
+}
+
+/**
+ *
+ * @param {*} _
+ * @param {object} args
+ * @param {object} ctx
+ * @param {object} info
+ * @returns {object} user
+ */
+const getUser = async (_, args, ctx, info) => {
+  const { userId } = ctx.request;
+  if (!userId) {
+    return null
+  }
+  const { models } = ctx;
+  const user = await models.users.findOne({
+    where: {
+      id: userId
+    }
+  });
+  return user
+}
 export default {
+  Query:{
+    getUser,
+  },
   Mutation: {
     createUser,
-    signIn
+    signIn,
+    signOut
   }
 };

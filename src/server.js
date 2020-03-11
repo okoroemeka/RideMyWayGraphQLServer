@@ -1,4 +1,4 @@
-import  dotenv  from 'dotenv';
+import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 import cookieParser from 'cookie-parser';
 import createServer from './createServer';
@@ -19,13 +19,17 @@ server.express.use((req, res, next) => {
 });
 
 const serverOptions = {
-  port: 5030,
+  port: process.env.PORT||5030,
   endpoint: '/graphql',
   playground: '/docs',
   tracing: true,
-  debug: true
+  debug: true,
+  cors: {
+    credentials: true,
+    origin: process.env.FRONTEND_URL
+  }
 };
 
-server.start(
-  serverOptions
-,({port}) => console.log(`Server on port ${port}`))
+server.start(serverOptions, ({ port }) =>
+  console.log(`Server on port ${port}`)
+);

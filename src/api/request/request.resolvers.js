@@ -1,6 +1,6 @@
 // import checkFields from '../../utils/checkFields';
 import userAuth from '../../utils/userAuth';
-import { findRideById, findRideRequestById } from '../../utils/queryHelper';
+import { findRideById, findRideRequestById, rideTableOptions } from '../../utils/queryHelper';
 
 /**
  * @param {*} _
@@ -38,23 +38,59 @@ const respondToRideRequest = async (_, { input }, ctx, info) => {
     text: `Ride ${approved ? 'accepted' : 'rejected'} successfully`
   };
 };
+/**
+ * @param {*} _
+ * @param {object} input
+ * @param {object} ctx
+ * @param {object} info
+ * @returns {object} requests
+ */
 const getRideRequests = async (_, { input }, ctx, info) => {
-  const { rideId } = input;
-  const { models } = ctx;
-  userAuth(ctx);
-  const requests = await models.request.findAll({
-    where: {
-      rideId
+  try {
+    let rideId = input.rideId;
+    const { models, request:{userId} } = ctx;
+    userAuth(ctx);
+    if (!rideId) {
+      const ride = await models.ride.findAll({
+        where: {
+          userId
+        },
+        attributes: ['id'],
+        order: [['createdAt', 'DESC']],
+        limit: 1
+      });
+      if (ride.length === 0) {
+        return []
+      }
+      rideId = ride[0].dataValues.id;
     }
-  });
-  return requests;
+    const requests = await models.request.findAll({
+      where: {
+        rideId,
+      }
+    });
+    return requests;
+  } catch (error) {
+    throw new Error('Error occured, please try again later')
+  }
+  
 };
 
 const joinRide = async (_, { input }, ctx, info) => {
   userAuth(ctx);
-  const { models } = ctx;
-  const { userId } = ctx.request;
+  // const { models } = ctx;
+  const { models, request:{userId} } = ctx;
+  // const { userId } = ctx.request;
   const { rideId } = input;
+  const check = await models.request.findOne({
+    where: {
+      rideId,
+      userId
+    }
+  });
+  if (check) {
+    throw new Error('You have already joined this ride');
+  }
   const request = await models.request.create({
     rideId,
     userId
@@ -68,5 +104,32 @@ export default {
   Mutation: {
     respondToRideRequest,
     joinRide
+  },
+  RideRequest: {
+    user(request, _, ctx) {
+      return ctx.models.users.findOne({
+        where: {
+          id: request.userId
+        }
+      });
+    },
+    ride(request, _, ctx) {
+      return ctx.models.ride.findOne({
+        where: {
+          id: request.rideId
+        },
+        attributes: [
+          'id',
+          'pickup',
+          'destination',
+          'departure',
+          'capacity',
+          'carColor',
+          'carType',
+          'plateNumber',
+          'userId'
+        ]
+      });
+    }
   }
 };

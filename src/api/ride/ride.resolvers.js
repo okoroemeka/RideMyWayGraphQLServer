@@ -1,9 +1,18 @@
+import Sequelize from 'sequelize';
 import checkFields from '../../utils/checkFields';
 import userAuth from '../../utils/userAuth';
-import { findRideById, findRideRequestById } from '../../utils/queryHelper';
+
+const Op = Sequelize.Op;
+
 const createRideHelper = (input, model, userId) => {
   return model.create({
-    ...input,
+    pickup:input.pickup.toLowerCase(),
+    departure:input.departure.toLowerCase(),
+    destination: input.destination.toLowerCase(),
+    capacity: input.capacity,
+    carColor: input.carColor.toLowerCase(),
+    carType: input.carType.toLowerCase(),
+    plateNumber: input.plateNumber,
     userId
   });
 };
@@ -11,7 +20,7 @@ const createRideHelper = (input, model, userId) => {
 const createRide = (_, { input }, ctx, info) => {
   checkFields(input);
   const { userId } = ctx.request;
-  // if (!userId) throw new Error('Please login to continue');
+  if (!userId) throw new Error('Please login to continue');
   userAuth(ctx);
   return createRideHelper(input, ctx.models.ride, userId);
 };
@@ -24,7 +33,8 @@ const createRide = (_, { input }, ctx, info) => {
 const getRidesHelper = (input, model) => {
   return model.findAll({
     where: {
-      ...input
+      pickup: input.pickup.toLowerCase(),
+      destination: { [Op.startsWith]: input.destination.toLowerCase() }
     },
     attributes: [
       'id',
@@ -57,5 +67,14 @@ export default {
   },
   Mutation: {
     createRide
+  },
+  Ride:{
+    user(ride, _, ctx){
+      return ctx.models.users.findOne({
+        where: {
+          id: ride.userId
+        }
+      });
+    }
   }
 };

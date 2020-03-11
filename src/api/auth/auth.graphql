@@ -1,3 +1,5 @@
+# import message from '../ride/ride.graphql'
+
 type User {
   id: Int
   firstname: String!
@@ -28,8 +30,10 @@ input SignInInput{
 }
 type Query{
   user(input:UserInput!):User!
+  getUser: User
 }
 type Mutation {
   createUser(input: NewUserInput!):User!
   signIn(input:SignInInput!):User!
+  signOut: message
 }
